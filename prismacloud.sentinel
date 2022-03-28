@@ -1,7 +1,7 @@
 import "http"
 import "json"
 
-loginReq = http.request("https://api.prismacloud.io/login").with_body(json.marshal({"username": bcbc5279-19d2-44c4-a4d3-452c9faf83d9, "password": 8zsxalCJv4H/PwxLW1XObuSTRkU=})).with_header("Content-Type", "application/json")
+loginReq = http.request("https://api.prismacloud.io/login").with_body(json.marshal({"username": "bcbc5279-19d2-44c4-a4d3-452c9faf83d9", "password": "8zsxalCJv4H/PwxLW1XObuSTRkU="})).with_header("Content-Type", "application/json")
 loginResp = json.unmarshal(http.post(loginReq).body)
 
 req = http.request("https://api.prismacloud.io/bridgecrew/api/v1/tfCloud/sentinel/example-org-33046a").with_header("Authorization", loginResp.token)
