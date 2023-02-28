@@ -9,7 +9,7 @@ terraform {
 }
 
 provider "aws" {
-  region  = var.region
+  region = var.region
 }
 
 resource "aws_vpc" "hashicat" {
@@ -17,8 +17,10 @@ resource "aws_vpc" "hashicat" {
   enable_dns_hostnames = true
 
   tags = {
-    name = "${var.prefix}-vpc-${var.region}"
+    name        = "${var.prefix}-vpc-${var.region}"
     environment = "Production"
+    git_org     = "amckenzie7"
+    git_repo    = "hashicat-aws"
   }
 }
 
@@ -27,7 +29,9 @@ resource "aws_subnet" "hashicat" {
   cidr_block = var.subnet_prefix
 
   tags = {
-    name = "${var.prefix}-subnet"
+    name     = "${var.prefix}-subnet"
+    git_org  = "amckenzie7"
+    git_repo = "hashicat-aws"
   }
 }
 
@@ -66,7 +70,9 @@ resource "aws_security_group" "hashicat" {
   }
 
   tags = {
-    Name = "${var.prefix}-security-group"
+    Name     = "${var.prefix}-security-group"
+    git_org  = "amckenzie7"
+    git_repo = "hashicat-aws"
   }
 }
 
@@ -74,7 +80,9 @@ resource "aws_internet_gateway" "hashicat" {
   vpc_id = aws_vpc.hashicat.id
 
   tags = {
-    Name = "${var.prefix}-internet-gateway"
+    Name     = "${var.prefix}-internet-gateway"
+    git_org  = "amckenzie7"
+    git_repo = "hashicat-aws"
   }
 }
 
@@ -84,6 +92,10 @@ resource "aws_route_table" "hashicat" {
   route {
     cidr_block = "0.0.0.0/0"
     gateway_id = aws_internet_gateway.hashicat.id
+  }
+  tags = {
+    git_org  = "amckenzie7"
+    git_repo = "hashicat-aws"
   }
 }
 
@@ -112,6 +124,10 @@ data "aws_ami" "ubuntu" {
 resource "aws_eip" "hashicat" {
   instance = aws_instance.hashicat.id
   vpc      = true
+  tags = {
+    git_org  = "amckenzie7"
+    git_repo = "hashicat-aws"
+  }
 }
 
 resource "aws_eip_association" "hashicat" {
@@ -128,7 +144,9 @@ resource "aws_instance" "hashicat" {
   vpc_security_group_ids      = [aws_security_group.hashicat.id]
 
   tags = {
-    Name = "${var.prefix}-hashicat-instance"
+    Name     = "${var.prefix}-hashicat-instance"
+    git_org  = "amckenzie7"
+    git_repo = "hashicat-aws"
   }
 }
 
@@ -197,4 +215,8 @@ locals {
 resource "aws_key_pair" "hashicat" {
   key_name   = local.private_key_filename
   public_key = tls_private_key.hashicat.public_key_openssh
+  tags = {
+    git_org  = "amckenzie7"
+    git_repo = "hashicat-aws"
+  }
 }
