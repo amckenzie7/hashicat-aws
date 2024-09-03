@@ -9,7 +9,7 @@ terraform {
 }
 
 provider "aws" {
-  region  = var.region
+  region = var.region
 }
 
 resource "aws_vpc" "hashicat" {
@@ -17,8 +17,9 @@ resource "aws_vpc" "hashicat" {
   enable_dns_hostnames = true
 
   tags = {
-    name = "${var.prefix}-vpc-${var.region}"
+    name        = "${var.prefix}-vpc-${var.region}"
     environment = "Production"
+    user        = "pchandaliya"
   }
 }
 
@@ -28,6 +29,7 @@ resource "aws_subnet" "hashicat" {
 
   tags = {
     name = "${var.prefix}-subnet"
+    user = "pchandaliya"
   }
 }
 
@@ -67,6 +69,7 @@ resource "aws_security_group" "hashicat" {
 
   tags = {
     Name = "${var.prefix}-security-group"
+    user = "pchandaliya"
   }
 }
 
@@ -75,6 +78,7 @@ resource "aws_internet_gateway" "hashicat" {
 
   tags = {
     Name = "${var.prefix}-internet-gateway"
+    user = "pchandaliya"
   }
 }
 
@@ -84,6 +88,9 @@ resource "aws_route_table" "hashicat" {
   route {
     cidr_block = "0.0.0.0/0"
     gateway_id = aws_internet_gateway.hashicat.id
+  }
+  tags = {
+    user = "pchandaliya"
   }
 }
 
@@ -112,6 +119,9 @@ data "aws_ami" "ubuntu" {
 resource "aws_eip" "hashicat" {
   instance = aws_instance.hashicat.id
   vpc      = true
+  tags = {
+    user = "pchandaliya"
+  }
 }
 
 resource "aws_eip_association" "hashicat" {
@@ -129,6 +139,7 @@ resource "aws_instance" "hashicat" {
 
   tags = {
     Name = "${var.prefix}-hashicat-instance"
+    user = "pchandaliya"
   }
 }
 
@@ -197,4 +208,7 @@ locals {
 resource "aws_key_pair" "hashicat" {
   key_name   = local.private_key_filename
   public_key = tls_private_key.hashicat.public_key_openssh
+  tags = {
+    user = "pchandaliya"
+  }
 }
